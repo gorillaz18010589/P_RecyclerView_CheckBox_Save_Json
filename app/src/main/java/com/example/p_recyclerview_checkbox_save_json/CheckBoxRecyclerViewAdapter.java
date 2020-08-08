@@ -2,6 +2,10 @@ package com.example.p_recyclerview_checkbox_save_json;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.ImageSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -53,8 +57,10 @@ public class CheckBoxRecyclerViewAdapter extends RecyclerView.Adapter<CheckBoxRe
     public void onBindViewHolder(@NonNull final CheckBoxViewHolder holder, final int position) {
             holder.tvTitle.setText(mData.get(position).title);
 
+//        setCheckBox(holder);
 
-            holder.checkBox.setOnClickListener(new View.OnClickListener() {
+
+        holder.checkBox.setOnClickListener(new View.OnClickListener() {
 
                 @Override
                 public void onClick(View v) {
@@ -67,7 +73,7 @@ public class CheckBoxRecyclerViewAdapter extends RecyclerView.Adapter<CheckBoxRe
                 }
             });
 
-        //3.如果點案的位置等於現在的位置按鈕打勾,否則不打勾
+        //3.如果點案的位置等於現在的位置按鈕打勾記住帳號
         if (row_index == position) {
              holder.checkBox.setChecked(true);
              SharedPreferencesUtil.getInstance(context).removeAccount();
@@ -83,13 +89,13 @@ public class CheckBoxRecyclerViewAdapter extends RecyclerView.Adapter<CheckBoxRe
 
 
         if (isChecked) {
+            //有點選後
         } else {
+            //初始化時
             //抓到記住帳號的位置相等於這個item要處理的事情
             if (SharedPreferencesUtil.getInstance(context).getAccount() != null && holder.getLayoutPosition() == Integer.parseInt(SharedPreferencesUtil.getInstance(context).getAccount())) {
                     Log.v("hank", "位置相同 account:：" + SharedPreferencesUtil.getInstance(context).getAccount() +"adapterPosition:" +holder.getLayoutPosition());
                     holder.checkBox.setChecked(true);
-
-
             } else {
                 //其他item
                 holder.checkBox.setChecked(false);
@@ -101,6 +107,21 @@ public class CheckBoxRecyclerViewAdapter extends RecyclerView.Adapter<CheckBoxRe
 
     }
 
+    //在checkBox旁邊加上一張自訂圖案
+    private void setCheckBox(@NonNull CheckBoxViewHolder holder) {
+        // 创建Drawable对象
+        Drawable drawable = context.getResources().getDrawable(R.drawable.checkbox);
+        //设置drawable的位置,宽高
+        drawable.setBounds(0, 0, 50, 50);
+        //创建ImageSpan对象
+        ImageSpan imageSpan = new ImageSpan(drawable);
+        //创建SpannableStringBuilder对象
+        SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(".");
+        //将imageSpan放入spannableStringBuilder中
+        spannableStringBuilder.setSpan(imageSpan, 0, 1, Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
+        //设置cb的文本,将spannableStringBuilder放入
+        holder.checkBox.setText(spannableStringBuilder);
+    }
 
 
     @Override
