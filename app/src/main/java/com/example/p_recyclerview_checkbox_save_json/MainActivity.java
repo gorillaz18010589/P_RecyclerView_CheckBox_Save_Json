@@ -50,4 +50,16 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(checkBoxRecyclerViewAdapter);
     }
+
+
+
+    /*
+    * ViewGroup.LayoutParams lp = rv.getLayoutParams();
+if (list.size() > 4) {
+    lp.height = DensityUtil.dip2px(mContext,32 * 4);
+} else {
+    lp.height = DensityUtil.dip2px(mContext,34 * list.size());
+}
+rv.setLayoutParams(lp);
+*/
 }
