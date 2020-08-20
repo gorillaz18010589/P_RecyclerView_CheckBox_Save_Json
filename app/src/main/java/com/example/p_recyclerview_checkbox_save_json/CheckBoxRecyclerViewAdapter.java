@@ -15,10 +15,12 @@ import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.meetsl.scardview.SCardView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -57,8 +59,12 @@ public class CheckBoxRecyclerViewAdapter extends RecyclerView.Adapter<CheckBoxRe
     public void onBindViewHolder(@NonNull final CheckBoxViewHolder holder, final int position) {
             holder.tvTitle.setText(mData.get(position).title);
 
-//        setCheckBox(holder);
 
+
+//        setCheckBox(holder);
+//        ViewGroup.LayoutParams layoutParams = holder.itemView.getLayoutParams();
+//        layoutParams.height = (ScreenUtils.getStatusHeight(context) + DpPxUtils.dp2Px(context, 120));
+//        layoutParams.height = (layoutParams.height);
 
         holder.checkBox.setOnClickListener(new View.OnClickListener() {
 
@@ -132,11 +138,18 @@ public class CheckBoxRecyclerViewAdapter extends RecyclerView.Adapter<CheckBoxRe
     public class CheckBoxViewHolder extends RecyclerView.ViewHolder{
         private TextView tvTitle;
         private CheckBox checkBox;
+        private SCardView sCardView;
         public CheckBoxViewHolder(@NonNull View itemView) {
             super(itemView);
 
             tvTitle = itemView.findViewById(R.id.tv_title);
             checkBox = itemView.findViewById(R.id.cb_checked);
+            sCardView = itemView.findViewById(R.id.sCard);
         }
+
+
     }
-}
+
+
+
+    }

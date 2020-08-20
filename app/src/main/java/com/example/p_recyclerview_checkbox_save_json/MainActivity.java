@@ -10,12 +10,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.google.gson.Gson;
@@ -61,14 +64,23 @@ public class MainActivity extends AppCompatActivity {
         cards.add(new Card("測試1", true));
         cards.add(new Card("測試1", true));
         cards.add(new Card("測試1", true));
+
         final CheckBoxRecyclerViewAdapter checkBoxRecyclerViewAdapter = new CheckBoxRecyclerViewAdapter(this, cards);
 
         recyclerView = findViewById(R.id.recyclerView);
 
+
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+
+
+        ViewGroup.LayoutParams lp = recyclerView.getLayoutParams();
+//        if (cards.size() > 8) {
+//            lp.height = DensityUtil.dip2px(MainActivity.this,32 * 4);
+//        } else {
+            lp.height = DensityUtil.dip2px(MainActivity.this,120 * cards.size());
+//        }
+        recyclerView.setLayoutParams(lp);
         recyclerView.setLayoutManager(linearLayoutManager);
-
-
         recyclerView.setOnScrollChangeListener(new View.OnScrollChangeListener() {
             @Override
             public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
@@ -89,10 +101,6 @@ public class MainActivity extends AppCompatActivity {
 
                 //如果看到第五個item
                 if (linearLayoutManager.findLastVisibleItemPosition() == 5) {
-
-//                    ViewGroup.LayoutParams layoutParams = recyclerView.getChildAt(0).getLayoutParams();
-//                    RecyclerView.ViewHolder viewHolder = recyclerView.getChildViewHolder(LayoutInflater.from(MainActivity.this).inflate(R.layout.linear_item,null));
-//                    layoutParams.width = (ScreenUtils.getScreenWidth(MainActivity.this) - DpPxUtils.dp2Px(MainActivity.this, 70)) / 3;//
 
                     dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_CANCEL, 0, 0, 0)); //強制停止滑動
                     Log.v("hank", "已出現超過5");
@@ -120,5 +128,22 @@ if (list.size() > 4) {
 }
 rv.setLayoutParams(lp);
 */
+    }
+    class MyLayoutManage extends LinearLayoutManager {
+
+        public MyLayoutManage(Context context, int orientation, boolean reverseLayout) {
+            super(context, orientation, reverseLayout);
+        }
+
+        @Override
+        public void onMeasure(RecyclerView.Recycler recycler, RecyclerView.State state, int widthSpec, int heightSpec) {
+            View view = recycler.getViewForPosition(0);
+            if (view != null) {
+                measureChild(view, widthSpec, heightSpec);
+                int measuredWidth = View.MeasureSpec.getSize(widthSpec);
+                int measuredHeight = view.getMeasuredHeight();
+                setMeasuredDimension(measuredWidth, measuredHeight);
+            }
+        }
     }
 }
