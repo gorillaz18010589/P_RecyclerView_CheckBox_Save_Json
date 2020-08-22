@@ -1,2 +1,2 @@
 rootProject.name='P_RecyclerView_CheckBox_Save_Json'
-include ':app'
+include ':app', ':shape'

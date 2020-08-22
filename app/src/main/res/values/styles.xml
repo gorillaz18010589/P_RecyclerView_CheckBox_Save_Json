@@ -12,6 +12,13 @@
     <style name="checkBoxStyle" parent="Widget.AppCompat.CompoundButton.CheckBox">
 
         <item name="android:button">@drawable/check_box_selector</item>
+    </style>
+
+
+
+    <style name="newCheckBoxStyle" parent="Widget.AppCompat.CompoundButton.CheckBox">
+
+        <item name="android:button">@drawable/new_check_box</item>
 
     </style>
 </resources>

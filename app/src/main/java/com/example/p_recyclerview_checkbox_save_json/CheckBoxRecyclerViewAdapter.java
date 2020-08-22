@@ -1,8 +1,12 @@
 package com.example.p_recyclerview_checkbox_save_json;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
+import android.os.Build;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.ImageSpan;
@@ -15,9 +19,11 @@ import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.shape.DisplayUtil;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.meetsl.scardview.SCardView;
@@ -61,6 +67,15 @@ public class CheckBoxRecyclerViewAdapter extends RecyclerView.Adapter<CheckBoxRe
 
 
 
+        //初始化設定指定要設置的style並且設定寬高
+//取得设置好的drawable对象
+        Drawable drawable = context.getResources().getDrawable(R.drawable.new_check_box);
+//设置drawable对象的大小
+        drawable.setBounds(0,0,100,100); //右下設置寬高
+//设置CheckBox对象的位置，对应为左、上、右、下
+        holder.checkBox.setCompoundDrawables(drawable,null,null,null);
+
+//        setRadiusBg(holder.checkBox);
 //        setCheckBox(holder);
 //        ViewGroup.LayoutParams layoutParams = holder.itemView.getLayoutParams();
 //        layoutParams.height = (ScreenUtils.getStatusHeight(context) + DpPxUtils.dp2Px(context, 120));
@@ -82,6 +97,7 @@ public class CheckBoxRecyclerViewAdapter extends RecyclerView.Adapter<CheckBoxRe
         //3.如果點案的位置等於現在的位置按鈕打勾記住帳號
         if (row_index == position) {
              holder.checkBox.setChecked(true);
+             setRadiusBg(holder.checkBox);
              SharedPreferencesUtil.getInstance(context).removeAccount();
              SharedPreferencesUtil.getInstance(context).setAccount(String.valueOf(row_index));
              isChecked = true;
@@ -100,6 +116,7 @@ public class CheckBoxRecyclerViewAdapter extends RecyclerView.Adapter<CheckBoxRe
             //初始化時
             //抓到記住帳號的位置相等於這個item要處理的事情
             if (SharedPreferencesUtil.getInstance(context).getAccount() != null && holder.getLayoutPosition() == Integer.parseInt(SharedPreferencesUtil.getInstance(context).getAccount())) {
+                    setRadiusBg(holder.checkBox);
                     Log.v("hank", "位置相同 account:：" + SharedPreferencesUtil.getInstance(context).getAccount() +"adapterPosition:" +holder.getLayoutPosition());
                     holder.checkBox.setChecked(true);
             } else {
@@ -150,6 +167,19 @@ public class CheckBoxRecyclerViewAdapter extends RecyclerView.Adapter<CheckBoxRe
 
     }
 
-
+    //設定圓角背景自帶背景顏色
+    @SuppressLint("WrongConstant")
+    @RequiresApi(api = Build.VERSION_CODES.Q)
+    private void setRadiusBg(View view) {
+        GradientDrawable drawable=new GradientDrawable();
+        drawable.setShape(GradientDrawable.RECTANGLE);
+        drawable.setGradientType(GradientDrawable.RECTANGLE);
+        drawable.setCornerRadius(5);
+        drawable.setStroke(DisplayUtil.px2dip(context,10f), Color.BLACK);
+//        drawable.setPadding(DisplayUtil.px2dip(context,10),DisplayUtil.px2dip(context,10),DisplayUtil.px2dip(context,),DisplayUtil.px2dip(context,10));
+        drawable.setBounds(0,0,20,20);
+        drawable.setColor(context.getResources().getColor(R.color.colorAccent));
+        view.setBackground(drawable);
+    }
 
     }
