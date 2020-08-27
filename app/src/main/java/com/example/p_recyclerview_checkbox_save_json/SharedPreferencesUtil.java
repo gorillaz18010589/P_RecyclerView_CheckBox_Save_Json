@@ -41,7 +41,7 @@ public class SharedPreferencesUtil {
     }
 
     public String getAccount() {
-        Log.v(KVUtils.TAG_H, "getAccount:" + sharedPreferences.getString(ACCOUNT_TOKEN, "Account失敗"));
+//        Log.v(KVUtils.TAG_H, "getAccount:" + sharedPreferences.getString(ACCOUNT_TOKEN, "Account失敗"));
         return sharedPreferences.getString(ACCOUNT_TOKEN, "");
     }
 

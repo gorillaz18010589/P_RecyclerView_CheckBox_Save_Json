@@ -38,95 +38,70 @@ public class CheckBoxRecyclerViewAdapter extends RecyclerView.Adapter<CheckBoxRe
     private Context context;
     private List<Card> mData;
     private int row_index = -1;
-    private String json;
     private Gson gson = new Gson();
-    private List<BankCard> bankCards;
-    private boolean isChecked;
-    private int checkIndex = -1;
-    private String accounts;
-    private int isNotfi = -2;
+
+
     public CheckBoxRecyclerViewAdapter(Context context, List<Card> mData) {
         this.context = context;
         this.mData = mData;
-//        json = SharedPreferencesUtil.getInstance(context).getJson();
-//        this.bankCards =  gson.fromJson(json,new TypeToken<List<BankCard>>(){}.getType());
-//        this.account = SharedPreferencesUtil.getInstance(context).getAccount();
     }
 
     @NonNull
     @Override
     public CheckBoxViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view =LayoutInflater.from(context).inflate(R.layout.item_card,parent,false);
+        View view = LayoutInflater.from(context).inflate(R.layout.item_card, parent, false);
         CheckBoxViewHolder checkBoxViewHolder = new CheckBoxViewHolder(view);
         return checkBoxViewHolder;
     }
 
     @Override
     public void onBindViewHolder(@NonNull final CheckBoxViewHolder holder, final int position) {
-            holder.tvTitle.setText(mData.get(position).title);
+        holder.tvTitle.setText(mData.get(position).title);
 
 
-
-        //初始化設定指定要設置的style並且設定寬高
-//取得设置好的drawable对象
+        //設定checkbox樣式
         Drawable drawable = context.getResources().getDrawable(R.drawable.new_check_box);
-//设置drawable对象的大小
-        drawable.setBounds(0,0,100,100); //右下設置寬高
-//设置CheckBox对象的位置，对应为左、上、右、下
-        holder.checkBox.setCompoundDrawables(drawable,null,null,null);
+        //设置drawable对象的大小
+        drawable.setBounds(0, 0, 100, 100); //右下設置寬高
+        //设置CheckBox对象的位置，对应为左、上、右、下
+        holder.checkBox.setCompoundDrawables(drawable, null, null, null);
 
-//        setRadiusBg(holder.checkBox);
-//        setCheckBox(holder);
-//        ViewGroup.LayoutParams layoutParams = holder.itemView.getLayoutParams();
-//        layoutParams.height = (ScreenUtils.getStatusHeight(context) + DpPxUtils.dp2Px(context, 120));
-//        layoutParams.height = (layoutParams.height);
 
+        //＊＊這邊開始處理點選checkbox記住帳號,可以切換,不能複選
+        Log.v("hank", "外部開頭->" + "位置=" + position + "帳號 ＝" + SharedPreferencesUtil.getInstance(context).getAccount());
         holder.checkBox.setOnClickListener(new View.OnClickListener() {
+            //按下去記住帳號,還有row_index位置,notifyDataSetChanged->會再重新跑一次
+            @Override
+            public void onClick(View v) {
+                //1.當點下去將位置傳給row_index
+                row_index = position;
+                SharedPreferencesUtil.getInstance(context).removeAccount();
+                SharedPreferencesUtil.getInstance(context).setAccount(String.valueOf(row_index));
+                Log.v("hank", "onClick:" + row_index + "/" + position);
+                //2.notifyDataSetChanged();重新讓RecyclerView重跑
+                notifyDataSetChanged();
+            }
+        });
 
-                @Override
-                public void onClick(View v) {
-                    //1.當點下去將位置傳給row_index
-                     row_index = position;
-                     Log.v("hank","onClick:" + row_index +"/" + position);
-                     //2.notifyDataSetChanged();重新讓RecyclerView重跑
-
-                    notifyDataSetChanged();
-                }
-            });
 
         //3.如果點案的位置等於現在的位置按鈕打勾記住帳號
         if (row_index == position) {
-             holder.checkBox.setChecked(true);
-             setRadiusBg(holder.checkBox);
-             SharedPreferencesUtil.getInstance(context).removeAccount();
-             SharedPreferencesUtil.getInstance(context).setAccount(String.valueOf(row_index));
-             isChecked = true;
-            Log.v("hank","很相等:" + row_index +"/" + position + "isCheckd:" + isChecked +"account:" + SharedPreferencesUtil.getInstance(context).getAccount());
+            Log.v("hank", "row_index==position->" + "位置是 =" + position + "帳號:" + SharedPreferencesUtil.getInstance(context).getAccount());
+            holder.checkBox.setChecked(true);
+            setRadiusBg(holder.checkBox);
         }
-        else {
+
+        //如果初始畫的位置相等於記住帳號的位置的話,位置打勾
+        if (position == Integer.parseInt(SharedPreferencesUtil.getInstance(context).getAccount())) {
+            Log.v("hank", "測試->" + "位置 =" + position + "/記住帳號 =" + SharedPreferencesUtil.getInstance(context).getAccount());
+            holder.checkBox.setChecked(true);
+            //反之如果初始畫的位置相等於記住帳號的位置的話,除了打勾的那個之外都不打勾
+        } else if (position != Integer.parseInt(SharedPreferencesUtil.getInstance(context).getAccount())) {
             holder.checkBox.setChecked(false);
-            Log.v("hank","不相等:" + row_index +"/" + position);
+            Log.v("hank", "測試false->" + "位置 =" + position + "/記住帳號 =" + SharedPreferencesUtil.getInstance(context).getAccount());
 
         }
-
-
-        if (isChecked) {
-            //有點選後
-        } else {
-            //初始化時
-            //抓到記住帳號的位置相等於這個item要處理的事情
-            if (SharedPreferencesUtil.getInstance(context).getAccount() != null && holder.getLayoutPosition() == Integer.parseInt(SharedPreferencesUtil.getInstance(context).getAccount())) {
-                    setRadiusBg(holder.checkBox);
-                    Log.v("hank", "位置相同 account:：" + SharedPreferencesUtil.getInstance(context).getAccount() +"adapterPosition:" +holder.getLayoutPosition());
-                    holder.checkBox.setChecked(true);
-            } else {
-                //其他item
-                holder.checkBox.setChecked(false);
-                Log.v("hank", "位置不相同 account：" + accounts +"adapterPosition:" +holder.getAdapterPosition());
-            }
-
-        }
-
+        Log.v("hank", "外部結尾->" + "位置=" + position + "帳號 ＝" + SharedPreferencesUtil.getInstance(context).getAccount());
 
     }
 
@@ -152,10 +127,11 @@ public class CheckBoxRecyclerViewAdapter extends RecyclerView.Adapter<CheckBoxRe
         return mData.size();
     }
 
-    public class CheckBoxViewHolder extends RecyclerView.ViewHolder{
+    public class CheckBoxViewHolder extends RecyclerView.ViewHolder {
         private TextView tvTitle;
         private CheckBox checkBox;
         private SCardView sCardView;
+
         public CheckBoxViewHolder(@NonNull View itemView) {
             super(itemView);
 
@@ -164,22 +140,21 @@ public class CheckBoxRecyclerViewAdapter extends RecyclerView.Adapter<CheckBoxRe
             sCardView = itemView.findViewById(R.id.sCard);
         }
 
-
     }
 
     //設定圓角背景自帶背景顏色
     @SuppressLint("WrongConstant")
     @RequiresApi(api = Build.VERSION_CODES.Q)
     private void setRadiusBg(View view) {
-        GradientDrawable drawable=new GradientDrawable();
+        GradientDrawable drawable = new GradientDrawable();
         drawable.setShape(GradientDrawable.RECTANGLE);
         drawable.setGradientType(GradientDrawable.RECTANGLE);
         drawable.setCornerRadius(5);
-        drawable.setStroke(DisplayUtil.px2dip(context,10f), Color.BLACK);
+        drawable.setStroke(DisplayUtil.px2dip(context, 10f), Color.BLACK);
 //        drawable.setPadding(DisplayUtil.px2dip(context,10),DisplayUtil.px2dip(context,10),DisplayUtil.px2dip(context,),DisplayUtil.px2dip(context,10));
-        drawable.setBounds(0,0,20,20);
+        drawable.setBounds(0, 0, 20, 20);
         drawable.setColor(context.getResources().getColor(R.color.colorAccent));
         view.setBackground(drawable);
     }
 
-    }
+}
