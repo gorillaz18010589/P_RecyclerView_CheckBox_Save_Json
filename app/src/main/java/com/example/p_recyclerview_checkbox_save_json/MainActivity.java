@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -21,6 +22,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import com.example.p_recyclerview_checkbox_save_json.bankcardcheckbox.BankCardActivity;
 import com.google.gson.Gson;
 
 import org.json.JSONObject;
@@ -129,6 +131,11 @@ if (list.size() > 4) {
 rv.setLayoutParams(lp);
 */
     }
+
+    public void toBankCard(View view) {
+        startActivity(new Intent(MainActivity.this, BankCardActivity.class));
+    }
+
     class MyLayoutManage extends LinearLayoutManager {
 
         public MyLayoutManage(Context context, int orientation, boolean reverseLayout) {

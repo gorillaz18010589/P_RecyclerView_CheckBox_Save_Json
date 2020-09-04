@@ -1,30 +1,35 @@
-package com.example.p_recyclerview_checkbox_save_json;
+package com.example.p_recyclerview_checkbox_save_json.bankcardcheckbox;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-public class SharedPreferencesUtil {
-    private static SharedPreferencesUtil instance;
+import com.example.p_recyclerview_checkbox_save_json.KVUtils;
+import com.example.p_recyclerview_checkbox_save_json.SharedPreferencesUtil;
+
+class SpUtils {
+    private static SpUtils instance;
     private Context context;
     private SharedPreferences sharedPreferences;
 
     private String ACCOUNT_TOKEN = "Account";
     private String PASSWORD_TOKEN = "Password";
-    private String FROM_BANK_CARD ="FROM_BANK_CARD";
+    private String FROM_BANK_CARD ="FROM_BANK_CARD1";
     private String JSON_TOKEN ="JSON1";
 
-    public static SharedPreferencesUtil getInstance(Context context) {
+    public static SpUtils getInstance(Context context) {
         if (instance == null) {
-            instance = new SharedPreferencesUtil(context);
+            instance = new SpUtils(context);
         }
         return instance;
     }
 
-    public SharedPreferencesUtil(Context context) {
+    public SpUtils(Context context) {
         this.context = context;
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        //用這個可以無限多個spgetSharedPreferences("name",Context.MODE_PRIVATE);
+        sharedPreferences = context.getSharedPreferences("name",Context.MODE_PRIVATE);
+//        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
     }
 
 
@@ -41,10 +46,10 @@ public class SharedPreferencesUtil {
 
 
     public void removeBankCardToken() {
-        SharedPreferences.Editor editRemoveCardToken = sharedPreferences.edit();
-        editRemoveCardToken.remove(FROM_BANK_CARD);
-        editRemoveCardToken.clear();
-        editRemoveCardToken.commit();
+        SharedPreferences.Editor reMoveBankToken = sharedPreferences.edit();
+        reMoveBankToken.remove(FROM_BANK_CARD);
+        reMoveBankToken.clear();
+        reMoveBankToken.commit();
     }
 
     public void setAccount(String account) {
@@ -115,5 +120,4 @@ public class SharedPreferencesUtil {
         editorAccount.commit();
 
     }
-
 }

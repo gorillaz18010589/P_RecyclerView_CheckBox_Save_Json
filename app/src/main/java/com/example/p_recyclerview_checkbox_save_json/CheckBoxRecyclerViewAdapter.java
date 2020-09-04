@@ -92,16 +92,19 @@ public class CheckBoxRecyclerViewAdapter extends RecyclerView.Adapter<CheckBoxRe
         }
 
         //如果初始畫的位置相等於記住帳號的位置的話,位置打勾
-        if (position == Integer.parseInt(SharedPreferencesUtil.getInstance(context).getAccount())) {
-            Log.v("hank", "測試->" + "位置 =" + position + "/記住帳號 =" + SharedPreferencesUtil.getInstance(context).getAccount());
-            holder.checkBox.setChecked(true);
-            //反之如果初始畫的位置相等於記住帳號的位置的話,除了打勾的那個之外都不打勾
-        } else if (position != Integer.parseInt(SharedPreferencesUtil.getInstance(context).getAccount())) {
-            holder.checkBox.setChecked(false);
-            Log.v("hank", "測試false->" + "位置 =" + position + "/記住帳號 =" + SharedPreferencesUtil.getInstance(context).getAccount());
+        if(!SharedPreferencesUtil.getInstance(context).getAccount().equals("fail")){
+            if (position == Integer.parseInt(SharedPreferencesUtil.getInstance(context).getAccount())) {
+                Log.v("hank", "測試->" + "位置 =" + position + "/記住帳號 =" + SharedPreferencesUtil.getInstance(context).getAccount());
+                holder.checkBox.setChecked(true);
+                //反之如果初始畫的位置相等於記住帳號的位置的話,除了打勾的那個之外都不打勾
+            } else if (position != Integer.parseInt(SharedPreferencesUtil.getInstance(context).getAccount())) {
+                holder.checkBox.setChecked(false);
+                Log.v("hank", "測試false->" + "位置 =" + position + "/記住帳號 =" + SharedPreferencesUtil.getInstance(context).getAccount());
 
+            }
+            Log.v("hank", "外部結尾->" + "位置=" + position + "帳號 ＝" + SharedPreferencesUtil.getInstance(context).getAccount());
         }
-        Log.v("hank", "外部結尾->" + "位置=" + position + "帳號 ＝" + SharedPreferencesUtil.getInstance(context).getAccount());
+
 
     }
 
